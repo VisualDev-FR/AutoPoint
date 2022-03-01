@@ -26,11 +26,11 @@ Partial Class Form1
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.btn_OpenPoint = New System.Windows.Forms.Button()
         Me.logFrame = New System.Windows.Forms.TextBox()
-        Me.txt_SSTache = New System.Windows.Forms.TextBox()
-        Me.txt_Tache = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.txt_Tache = New System.Windows.Forms.ComboBox()
+        Me.txt_SSTache = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'btn_OpenPoint
@@ -49,20 +49,6 @@ Partial Class Form1
         Me.logFrame.Name = "logFrame"
         Me.logFrame.Size = New System.Drawing.Size(230, 88)
         Me.logFrame.TabIndex = 2
-        '
-        'txt_SSTache
-        '
-        Me.txt_SSTache.Location = New System.Drawing.Point(12, 124)
-        Me.txt_SSTache.Name = "txt_SSTache"
-        Me.txt_SSTache.Size = New System.Drawing.Size(229, 23)
-        Me.txt_SSTache.TabIndex = 3
-        '
-        'txt_Tache
-        '
-        Me.txt_Tache.Location = New System.Drawing.Point(12, 80)
-        Me.txt_Tache.Name = "txt_Tache"
-        Me.txt_Tache.Size = New System.Drawing.Size(229, 23)
-        Me.txt_Tache.TabIndex = 4
         '
         'Label1
         '
@@ -87,15 +73,32 @@ Partial Class Form1
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 1000
         '
+        'txt_Tache
+        '
+        Me.txt_Tache.FormattingEnabled = True
+        Me.txt_Tache.Location = New System.Drawing.Point(12, 80)
+        Me.txt_Tache.Name = "txt_Tache"
+        Me.txt_Tache.Size = New System.Drawing.Size(229, 23)
+        Me.txt_Tache.TabIndex = 7
+        '
+        'txt_SSTache
+        '
+        Me.txt_SSTache.FormattingEnabled = True
+        Me.txt_SSTache.Location = New System.Drawing.Point(11, 124)
+        Me.txt_SSTache.Name = "txt_SSTache"
+        Me.txt_SSTache.Size = New System.Drawing.Size(230, 23)
+        Me.txt_SSTache.TabIndex = 8
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(249, 247)
+        Me.AutoSize = True
+        Me.ClientSize = New System.Drawing.Size(248, 250)
+        Me.Controls.Add(Me.txt_SSTache)
+        Me.Controls.Add(Me.txt_Tache)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.txt_Tache)
-        Me.Controls.Add(Me.txt_SSTache)
         Me.Controls.Add(Me.logFrame)
         Me.Controls.Add(Me.btn_OpenPoint)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -109,9 +112,9 @@ Partial Class Form1
 
     Friend WithEvents btn_OpenPoint As Button
     Friend WithEvents logFrame As TextBox
-    Friend WithEvents txt_SSTache As TextBox
-    Friend WithEvents txt_Tache As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Public WithEvents Timer1 As Timer
+    Friend WithEvents txt_Tache As ComboBox
+    Friend WithEvents txt_SSTache As ComboBox
 End Class

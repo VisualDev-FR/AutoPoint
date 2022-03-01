@@ -5,6 +5,7 @@ Public Class Form1
     Private Const fileCsvPath As String = "C:\Users\menan\source\repos\AutoPoint\AutoPoint.csv"
 
     Private lastPointage As Pointage
+    Private dicoTache As New Dictionary(Of String, Dictionary(Of String, String))
 
     Public lastPoint As String
 
@@ -18,9 +19,18 @@ Public Class Form1
 
         lastPointage.Read(lastCsvLine)
 
-        Call WriteLog()
+        If lastPointage.Status = "Open" Then
+            btn_OpenPoint.Text = "Fermer Pointage"
+            txt_Tache.Enabled = False
+            txt_SSTache.Enabled = False
+        Else
+            btn_OpenPoint.Text = "Ouvrir Pointage"
+        End If
 
-        Call Timer1_Tick()
+        Call WriteLog()
+        Call InitTaskLists()
+
+        Timer1.Start()
 
     End Sub
 
@@ -39,7 +49,7 @@ Public Class Form1
 
                 End If
 
-                Timer1.Start()
+                btn_OpenPoint.Text = "Fermer Pointage"
 
                 lastPointage = New Pointage
                 lastPointage.Open(txt_Tache.Text, txt_SSTache.Text)
@@ -47,9 +57,15 @@ Public Class Form1
                 txt_Tache.Enabled = False
                 txt_SSTache.Enabled = False
 
+                Call InitTaskLists()
+
+                Me.WindowState = FormWindowState.Minimized
+
             Case "Open"
 
+                btn_OpenPoint.Text = "Ouvrir Pointage"
                 lastPointage.Close()
+                Me.Text = "AutoPoint"
                 txt_Tache.Enabled = True
                 txt_SSTache.Enabled = True
 
@@ -87,6 +103,45 @@ Public Class Form1
 
     End Function
 
+    Private Sub InitTaskLists()
+
+        Dim dicoSSTache As New Dictionary(Of String, String)
+        Dim pointsTable As String()
+        Dim i As Integer
+
+        Dim mStreamReader As StreamReader = My.Computer.FileSystem.OpenTextFileReader(fileCsvPath)
+
+        pointsTable = Split(mStreamReader.ReadToEnd, vbCrLf)
+
+        For i = LBound(pointsTable, 1) To UBound(pointsTable, 1)
+
+            If pointsTable(i) <> "" Then
+
+                Dim activeTache As String = Split(pointsTable(i), ";")(0)
+                Dim activeSSTache As String = Split(pointsTable(i), ";")(1)
+
+                If Not dicoTache.ContainsKey(activeTache) Then dicoTache.Add(activeTache, New Dictionary(Of String, String))
+
+                If Not dicoTache(activeTache).ContainsKey(activeSSTache) Then dicoTache(activeTache).Add(activeSSTache, activeSSTache)
+
+            End If
+
+        Next i
+
+        txt_Tache.Items.Clear()
+
+        For Each strTache In dicoTache.Keys
+
+            txt_Tache.Items.Add(strTache)
+
+        Next
+
+        Call UpdateSSTacheList()
+
+        mStreamReader.Close()
+
+    End Sub
+
     Private Sub Timer1_Tick() Handles Timer1.Tick 'sender As Object, e As EventArgs
 
         With lastPointage
@@ -105,6 +160,28 @@ Public Class Form1
             End If
 
         End With
+
+    End Sub
+
+    Private Sub txt_Tache_Validated(sender As Object, e As EventArgs) Handles txt_Tache.Validated
+
+        Call InitTaskLists()
+
+    End Sub
+
+    Private Sub UpdateSSTacheList()
+
+        txt_SSTache.Items.Clear()
+
+        If dicoTache.ContainsKey(txt_Tache.Text) Then
+
+            For Each strSSTache In dicoTache(txt_Tache.Text).Keys
+
+                txt_SSTache.Items.Add(strSSTache)
+
+            Next
+
+        End If
 
     End Sub
 End Class
@@ -240,6 +317,7 @@ Class Pointage
     Property Status() As String
         Get
             Return pStatus
+
         End Get
 
         Set(value As String) : End Set
