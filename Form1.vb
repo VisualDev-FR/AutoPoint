@@ -205,6 +205,14 @@ Public Class Form1
 
             Next
 
+        Else
+
+            txt_Tache.Text = ""
+            txt_SSTache.Text = ""
+            txt_Tache.Items.Clear()
+            txt_SSTache.Items.Clear()
+            Exit Sub
+
         End If
 
         If dicoProjet(txt_Projet.Text).ContainsKey(txt_Tache.Text) Then
@@ -214,6 +222,12 @@ Public Class Form1
                 txt_SSTache.Items.Add(strSSTache)
 
             Next
+
+        Else
+
+            txt_SSTache.Text = ""
+            txt_SSTache.Items.Clear()
+            Exit Sub
 
         End If
 

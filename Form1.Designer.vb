@@ -25,7 +25,6 @@ Partial Class Form1
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.btn_OpenPoint = New System.Windows.Forms.Button()
-        Me.logFrame = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
@@ -33,24 +32,17 @@ Partial Class Form1
         Me.txt_SSTache = New System.Windows.Forms.ComboBox()
         Me.txt_Projet = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.logFrame = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'btn_OpenPoint
         '
-        Me.btn_OpenPoint.Location = New System.Drawing.Point(11, 12)
+        Me.btn_OpenPoint.Location = New System.Drawing.Point(12, 12)
         Me.btn_OpenPoint.Name = "btn_OpenPoint"
-        Me.btn_OpenPoint.Size = New System.Drawing.Size(230, 47)
+        Me.btn_OpenPoint.Size = New System.Drawing.Size(229, 47)
         Me.btn_OpenPoint.TabIndex = 0
         Me.btn_OpenPoint.Text = "Pointage"
         Me.btn_OpenPoint.UseVisualStyleBackColor = True
-        '
-        'logFrame
-        '
-        Me.logFrame.Location = New System.Drawing.Point(9, 197)
-        Me.logFrame.Multiline = True
-        Me.logFrame.Name = "logFrame"
-        Me.logFrame.Size = New System.Drawing.Size(230, 88)
-        Me.logFrame.TabIndex = 2
         '
         'Label1
         '
@@ -78,18 +70,18 @@ Partial Class Form1
         'txt_Tache
         '
         Me.txt_Tache.FormattingEnabled = True
-        Me.txt_Tache.Location = New System.Drawing.Point(10, 124)
+        Me.txt_Tache.Location = New System.Drawing.Point(12, 124)
         Me.txt_Tache.Name = "txt_Tache"
         Me.txt_Tache.Size = New System.Drawing.Size(229, 23)
-        Me.txt_Tache.TabIndex = 7
+        Me.txt_Tache.TabIndex = 2
         '
         'txt_SSTache
         '
         Me.txt_SSTache.FormattingEnabled = True
-        Me.txt_SSTache.Location = New System.Drawing.Point(9, 168)
+        Me.txt_SSTache.Location = New System.Drawing.Point(12, 168)
         Me.txt_SSTache.Name = "txt_SSTache"
-        Me.txt_SSTache.Size = New System.Drawing.Size(230, 23)
-        Me.txt_SSTache.TabIndex = 8
+        Me.txt_SSTache.Size = New System.Drawing.Size(229, 23)
+        Me.txt_SSTache.TabIndex = 3
         '
         'txt_Projet
         '
@@ -97,7 +89,7 @@ Partial Class Form1
         Me.txt_Projet.Location = New System.Drawing.Point(12, 80)
         Me.txt_Projet.Name = "txt_Projet"
         Me.txt_Projet.Size = New System.Drawing.Size(229, 23)
-        Me.txt_Projet.TabIndex = 11
+        Me.txt_Projet.TabIndex = 1
         '
         'Label4
         '
@@ -108,19 +100,28 @@ Partial Class Form1
         Me.Label4.TabIndex = 9
         Me.Label4.Text = "Projet :"
         '
+        'logFrame
+        '
+        Me.logFrame.BackColor = System.Drawing.SystemColors.ControlLightLight
+        Me.logFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.logFrame.Location = New System.Drawing.Point(10, 199)
+        Me.logFrame.Name = "logFrame"
+        Me.logFrame.Size = New System.Drawing.Size(231, 85)
+        Me.logFrame.TabIndex = 10
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
-        Me.ClientSize = New System.Drawing.Size(247, 293)
+        Me.ClientSize = New System.Drawing.Size(255, 293)
+        Me.Controls.Add(Me.logFrame)
         Me.Controls.Add(Me.txt_Projet)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.txt_SSTache)
         Me.Controls.Add(Me.txt_Tache)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.logFrame)
         Me.Controls.Add(Me.btn_OpenPoint)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Form1"
@@ -132,7 +133,6 @@ Partial Class Form1
     End Sub
 
     Friend WithEvents btn_OpenPoint As Button
-    Friend WithEvents logFrame As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Public WithEvents Timer1 As Timer
@@ -140,4 +140,5 @@ Partial Class Form1
     Friend WithEvents txt_SSTache As ComboBox
     Friend WithEvents txt_Projet As ComboBox
     Friend WithEvents Label4 As Label
+    Friend WithEvents logFrame As Label
 End Class
