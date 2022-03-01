@@ -5,10 +5,12 @@ Public Class Form1
     Private Const fileCsvPath As String = "C:\Users\menan\source\repos\AutoPoint\AutoPoint.csv"
 
     Private lastPointage As Pointage
-    Private dicoTache As New Dictionary(Of String, Dictionary(Of String, String))
+    Private dicoProjet As New Dictionary(Of String, Dictionary(Of String, Dictionary(Of String, String)))
 
     Public lastPoint As String
-
+    '---------------------------------------------------------------------------------------------------------------------------------------
+    'GESTION DES EVENEMENTS
+    '---------------------------------------------------------------------------------------------------------------------------------------
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Dim lastCsvLine As String
@@ -21,6 +23,7 @@ Public Class Form1
 
         If lastPointage.Status = "Open" Then
             btn_OpenPoint.Text = "Fermer Pointage"
+            txt_Projet.Enabled = False
             txt_Tache.Enabled = False
             txt_SSTache.Enabled = False
         Else
@@ -42,9 +45,9 @@ Public Class Form1
 
             Case "Closed"
 
-                If txt_Tache.Text = "" Or txt_SSTache.Text = "" Then
+                If txt_Projet.Text = "" Or txt_Tache.Text = "" Or txt_SSTache.Text = "" Then
 
-                    MessageBox.Show("Veuillez renseigner une tâche + une sous-tâche.")
+                    MessageBox.Show("Veuillez renseigner un Projet + une tâche + une sous-tâche.")
                     Exit Sub
 
                 End If
@@ -52,8 +55,9 @@ Public Class Form1
                 btn_OpenPoint.Text = "Fermer Pointage"
 
                 lastPointage = New Pointage
-                lastPointage.Open(txt_Tache.Text, txt_SSTache.Text)
+                lastPointage.Open(txt_Projet.Text, txt_Tache.Text, txt_SSTache.Text)
 
+                txt_Projet.Enabled = False
                 txt_Tache.Enabled = False
                 txt_SSTache.Enabled = False
 
@@ -66,6 +70,7 @@ Public Class Form1
                 btn_OpenPoint.Text = "Ouvrir Pointage"
                 lastPointage.Close()
                 Me.Text = "AutoPoint"
+                txt_Projet.Enabled = True
                 txt_Tache.Enabled = True
                 txt_SSTache.Enabled = True
 
@@ -74,16 +79,67 @@ Public Class Form1
         Call WriteLog()
 
     End Sub
+    Private Sub Timer1_Tick() Handles Timer1.Tick 'sender As Object, e As EventArgs
+
+        With lastPointage
+
+            If .Status = "Open" Then
+
+                Dim openDate As DateTime = Convert.ToDateTime(.Open_Hour)
+                Dim lapsDate As TimeSpan = Now - openDate
+
+                .Duration = Format(lapsDate.Hours, "00:") & Format(lapsDate.Minutes, "00:") & Format(lapsDate.Seconds, "00")
+
+                If Me.WindowState = FormWindowState.Minimized Then Me.Text = .Duration
+
+                Call WriteLog()
+
+            End If
+
+        End With
+
+    End Sub
+
+    Private Sub Form1_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
+
+        If Me.WindowState = FormWindowState.Minimized Then
+            Me.Text = lastPointage.Duration
+        Else
+            Me.Text = "AutoPoint"
+        End If
+
+    End Sub
+
+    Private Sub txt_Tache_Validated(sender As Object, e As EventArgs) Handles txt_Tache.Validated
+        Call InitTaskLists()
+    End Sub
+
+    Private Sub txt_Projet_Validated(sender As Object, e As EventArgs) Handles txt_Projet.Validated
+        Call InitTaskLists()
+    End Sub
+
+    Private Sub txt_Tache_SelectedValueChanged(sender As Object, e As EventArgs) Handles txt_Tache.SelectedValueChanged
+        txt_SSTache.Text = ""
+    End Sub
+
+    Private Sub txt_Projet_SelectedValueChanged(sender As Object, e As EventArgs) Handles txt_Projet.SelectedValueChanged
+        txt_Tache.Text = ""
+        txt_SSTache.Text = ""
+    End Sub
+
+    '---------------------------------------------------------------------------------------------------------------------------------------
+    'PROCEDURES
+    '---------------------------------------------------------------------------------------------------------------------------------------
 
     Private Sub WriteLog()
 
+        txt_Projet.Text = lastPointage.Projet
         txt_Tache.Text = lastPointage.Tache
         txt_SSTache.Text = lastPointage.SousTache
 
         logFrame.Text = lastPointage.strLog
 
     End Sub
-
     Private Function GetLastPoint() As String
 
         Dim mStreamReader As StreamReader
@@ -102,9 +158,9 @@ Public Class Form1
         End If
 
     End Function
-
     Private Sub InitTaskLists()
 
+        Dim dicoTache As New Dictionary(Of String, Dictionary(Of String, String))
         Dim dicoSSTache As New Dictionary(Of String, String)
         Dim pointsTable As String()
         Dim i As Integer
@@ -117,65 +173,43 @@ Public Class Form1
 
             If pointsTable(i) <> "" Then
 
-                Dim activeTache As String = Split(pointsTable(i), ";")(0)
-                Dim activeSSTache As String = Split(pointsTable(i), ";")(1)
+                Dim activeProjet As String = Split(pointsTable(i), ";")(0)
+                Dim activeTache As String = Split(pointsTable(i), ";")(1)
+                Dim activeSSTache As String = Split(pointsTable(i), ";")(2)
 
-                If Not dicoTache.ContainsKey(activeTache) Then dicoTache.Add(activeTache, New Dictionary(Of String, String))
+                If Not dicoProjet.ContainsKey(activeProjet) Then dicoProjet.Add(activeProjet, New Dictionary(Of String, Dictionary(Of String, String)))
 
-                If Not dicoTache(activeTache).ContainsKey(activeSSTache) Then dicoTache(activeTache).Add(activeSSTache, activeSSTache)
+                If Not dicoProjet(activeProjet).ContainsKey(activeTache) Then dicoProjet(activeProjet).Add(activeTache, New Dictionary(Of String, String))
+
+                If Not dicoProjet(activeProjet)(activeTache).ContainsKey(activeSSTache) Then dicoProjet(activeProjet)(activeTache).Add(activeSSTache, activeSSTache)
 
             End If
 
         Next i
 
+        txt_Projet.Items.Clear()
         txt_Tache.Items.Clear()
+        txt_SSTache.Items.Clear()
 
-        For Each strTache In dicoTache.Keys
+        For Each strProjet In dicoProjet.Keys
 
-            txt_Tache.Items.Add(strTache)
+            txt_Projet.Items.Add(strProjet)
 
         Next
 
-        Call UpdateSSTacheList()
+        If dicoProjet.ContainsKey(txt_Projet.Text) Then
 
-        mStreamReader.Close()
+            For Each strTache In dicoProjet(txt_Projet.Text).Keys
 
-    End Sub
+                txt_Tache.Items.Add(strTache)
 
-    Private Sub Timer1_Tick() Handles Timer1.Tick 'sender As Object, e As EventArgs
+            Next
 
-        With lastPointage
+        End If
 
-            If .Status = "Open" Then
+        If dicoProjet(txt_Projet.Text).ContainsKey(txt_Tache.Text) Then
 
-                Dim openDate As DateTime = Convert.ToDateTime(.Open_Hour)
-                Dim lapsDate As TimeSpan = Now - openDate
-
-                .Duration = Format(lapsDate.Hours, "00:") & Format(lapsDate.Minutes, "00:") & Format(lapsDate.Seconds, "00")
-
-                Me.Text = .Duration
-
-                Call WriteLog()
-
-            End If
-
-        End With
-
-    End Sub
-
-    Private Sub txt_Tache_Validated(sender As Object, e As EventArgs) Handles txt_Tache.Validated
-
-        Call InitTaskLists()
-
-    End Sub
-
-    Private Sub UpdateSSTacheList()
-
-        txt_SSTache.Items.Clear()
-
-        If dicoTache.ContainsKey(txt_Tache.Text) Then
-
-            For Each strSSTache In dicoTache(txt_Tache.Text).Keys
+            For Each strSSTache In dicoProjet(txt_Projet.Text)(txt_Tache.Text).Keys
 
                 txt_SSTache.Items.Add(strSSTache)
 
@@ -183,7 +217,10 @@ Public Class Form1
 
         End If
 
+        mStreamReader.Close()
+
     End Sub
+
 End Class
 
 Class Pointage
@@ -196,6 +233,7 @@ Class Pointage
     Private pClose As String
     Private pLaps As String
 
+    Private mProjet As String
     Private mTache As String
     Private mSSTache As String
 
@@ -205,9 +243,9 @@ Class Pointage
 
         ptDetail = Split(strLineInput, ";")
 
-        If UBound(ptDetail) = 3 Then
+        If UBound(ptDetail) = 4 Then
             pStatus = "Open"
-        ElseIf UBound(ptDetail) = 4 Then
+        ElseIf UBound(ptDetail) = 5 Then
             pStatus = "Closed"
         Else
             pStatus = "Error"
@@ -215,25 +253,28 @@ Class Pointage
             Exit Sub
         End If
 
-        mTache = ptDetail(0)
-        mSSTache = ptDetail(1)
-        pDate = ptDetail(2)
-        pOpen = ptDetail(3)
+        mProjet = ptDetail(0)
+        mTache = ptDetail(1)
+        mSSTache = ptDetail(2)
+        pDate = ptDetail(3)
+        pOpen = ptDetail(4)
 
-        If UBound(ptDetail) > 3 Then
-            pClose = ptDetail(4)
+        If UBound(ptDetail) > 4 Then
+            pClose = ptDetail(5)
             pLaps = GetTimeLaps(Convert.ToDateTime(pClose))
         End If
 
     End Sub
 
-    Public Sub Open(tache_ As String, ssTache_ As String)
+    Public Sub Open(projet_ As String, tache_ As String, ssTache_ As String)
 
         pStatus = "Open"
         pDate = Format(Now, "dd/MM/yyyy")
         pOpen = Format(Now, "HH:mm")
         pClose = ""
         pLaps = "00:00:00"
+
+        mProjet = projet_
         mTache = tache_
         mSSTache = ssTache_
 
@@ -241,15 +282,13 @@ Class Pointage
         Dim mStreamWriter As StreamWriter
         mStreamWriter = My.Computer.FileSystem.OpenTextFileWriter(fileCsvPath, True)
 
-        mStreamWriter.Write(mTache & ";" & mSSTache & ";" & pDate & ";" & pOpen)
+        mStreamWriter.Write(mProjet & ";" & mTache & ";" & mSSTache & ";" & pDate & ";" & pOpen)
 
         mStreamWriter.Close()
 
     End Sub
 
     Public Sub Close()
-
-        Dim timeLaps(0 To 1) As Double
 
         pStatus = "Closed"
         pClose = Format(Now, "HH:mm")
@@ -317,7 +356,6 @@ Class Pointage
     Property Status() As String
         Get
             Return pStatus
-
         End Get
 
         Set(value As String) : End Set
@@ -357,6 +395,13 @@ Class Pointage
         End Set
     End Property
 
+    Property Projet() As String
+        Get
+            Return mProjet
+        End Get
+
+        Set(value As String) : End Set
+    End Property
     Property Tache() As String
         Get
             Return mTache

@@ -31,6 +31,8 @@ Partial Class Form1
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.txt_Tache = New System.Windows.Forms.ComboBox()
         Me.txt_SSTache = New System.Windows.Forms.ComboBox()
+        Me.txt_Projet = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'btn_OpenPoint
@@ -44,7 +46,7 @@ Partial Class Form1
         '
         'logFrame
         '
-        Me.logFrame.Location = New System.Drawing.Point(11, 153)
+        Me.logFrame.Location = New System.Drawing.Point(9, 197)
         Me.logFrame.Multiline = True
         Me.logFrame.Name = "logFrame"
         Me.logFrame.Size = New System.Drawing.Size(230, 88)
@@ -53,7 +55,7 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 62)
+        Me.Label1.Location = New System.Drawing.Point(12, 106)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(43, 15)
         Me.Label1.TabIndex = 5
@@ -62,7 +64,7 @@ Partial Class Form1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 106)
+        Me.Label2.Location = New System.Drawing.Point(10, 150)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 15)
         Me.Label2.TabIndex = 6
@@ -76,7 +78,7 @@ Partial Class Form1
         'txt_Tache
         '
         Me.txt_Tache.FormattingEnabled = True
-        Me.txt_Tache.Location = New System.Drawing.Point(12, 80)
+        Me.txt_Tache.Location = New System.Drawing.Point(10, 124)
         Me.txt_Tache.Name = "txt_Tache"
         Me.txt_Tache.Size = New System.Drawing.Size(229, 23)
         Me.txt_Tache.TabIndex = 7
@@ -84,17 +86,36 @@ Partial Class Form1
         'txt_SSTache
         '
         Me.txt_SSTache.FormattingEnabled = True
-        Me.txt_SSTache.Location = New System.Drawing.Point(11, 124)
+        Me.txt_SSTache.Location = New System.Drawing.Point(9, 168)
         Me.txt_SSTache.Name = "txt_SSTache"
         Me.txt_SSTache.Size = New System.Drawing.Size(230, 23)
         Me.txt_SSTache.TabIndex = 8
+        '
+        'txt_Projet
+        '
+        Me.txt_Projet.FormattingEnabled = True
+        Me.txt_Projet.Location = New System.Drawing.Point(12, 80)
+        Me.txt_Projet.Name = "txt_Projet"
+        Me.txt_Projet.Size = New System.Drawing.Size(229, 23)
+        Me.txt_Projet.TabIndex = 11
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(12, 62)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(44, 15)
+        Me.Label4.TabIndex = 9
+        Me.Label4.Text = "Projet :"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
-        Me.ClientSize = New System.Drawing.Size(248, 250)
+        Me.ClientSize = New System.Drawing.Size(247, 293)
+        Me.Controls.Add(Me.txt_Projet)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.txt_SSTache)
         Me.Controls.Add(Me.txt_Tache)
         Me.Controls.Add(Me.Label2)
@@ -117,4 +138,6 @@ Partial Class Form1
     Public WithEvents Timer1 As Timer
     Friend WithEvents txt_Tache As ComboBox
     Friend WithEvents txt_SSTache As ComboBox
+    Friend WithEvents txt_Projet As ComboBox
+    Friend WithEvents Label4 As Label
 End Class
