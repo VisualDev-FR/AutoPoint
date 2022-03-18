@@ -4,6 +4,8 @@ Public Class Form1
 
     Private Const fileCsvPath As String = "C:\Users\menan\source\repos\AutoPoint\AutoPoint.csv"
 
+    Public csvEncoding As System.Text.Encoding = System.Text.Encoding.Unicode
+
     Private lastPointage As Pointage
     Private dicoProjet As New Dictionary(Of String, Dictionary(Of String, Dictionary(Of String, String)))
 
@@ -145,7 +147,7 @@ Public Class Form1
         Dim mStreamReader As StreamReader
         Dim tablePointFromCsv() As String
 
-        mStreamReader = My.Computer.FileSystem.OpenTextFileReader(fileCsvPath)
+        mStreamReader = My.Computer.FileSystem.OpenTextFileReader(fileCsvPath, csvEncoding)
 
         tablePointFromCsv = Split(mStreamReader.ReadToEnd, vbCrLf)
 
@@ -165,9 +167,11 @@ Public Class Form1
         Dim pointsTable As String()
         Dim i As Integer
 
-        Dim mStreamReader As StreamReader = My.Computer.FileSystem.OpenTextFileReader(fileCsvPath)
+        Dim mStreamReader As StreamReader = My.Computer.FileSystem.OpenTextFileReader(fileCsvPath, csvEncoding)
 
         pointsTable = Split(mStreamReader.ReadToEnd, vbCrLf)
+
+        mStreamReader.Close()
 
         For i = LBound(pointsTable, 1) To UBound(pointsTable, 1)
 
@@ -207,8 +211,8 @@ Public Class Form1
 
         Else
 
-            txt_Tache.Text = ""
-            txt_SSTache.Text = ""
+            'txt_Tache.Text = ""
+            'txt_SSTache.Text = ""
             txt_Tache.Items.Clear()
             txt_SSTache.Items.Clear()
             Exit Sub
@@ -225,21 +229,23 @@ Public Class Form1
 
         Else
 
-            txt_SSTache.Text = ""
+            'txt_SSTache.Text = ""
             txt_SSTache.Items.Clear()
             Exit Sub
 
         End If
 
-        mStreamReader.Close()
+
 
     End Sub
 
 End Class
 
-Class Pointage
+Public Class Pointage
 
     Public Const fileCsvPath As String = "C:\Users\menan\source\repos\AutoPoint\AutoPoint.csv"
+
+    Private csvEncoding As System.Text.Encoding = System.Text.Encoding.Unicode
 
     Private pStatus As String
     Private pDate As String
@@ -294,7 +300,7 @@ Class Pointage
 
 
         Dim mStreamWriter As StreamWriter
-        mStreamWriter = My.Computer.FileSystem.OpenTextFileWriter(fileCsvPath, True)
+        mStreamWriter = My.Computer.FileSystem.OpenTextFileWriter(fileCsvPath, True, csvEncoding)
 
         mStreamWriter.Write(mProjet & ";" & mTache & ";" & mSSTache & ";" & pDate & ";" & pOpen)
 
@@ -309,7 +315,7 @@ Class Pointage
         pLaps = GetTimeLaps(Convert.ToDateTime(pClose))
 
         Dim mStreamWriter As StreamWriter
-        mStreamWriter = My.Computer.FileSystem.OpenTextFileWriter(fileCsvPath, True)
+        mStreamWriter = My.Computer.FileSystem.OpenTextFileWriter(fileCsvPath, True, csvEncoding)
 
         mStreamWriter.Write(";" & pClose & vbCrLf)
 
